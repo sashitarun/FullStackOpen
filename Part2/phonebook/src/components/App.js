@@ -1,18 +1,35 @@
-import React, {useState} from 'react'
+import React, {useState,useEffect} from 'react'
+import Persons from './Persons'
+import PersonsForm from './PersonsForm'
+import Filter from './Filter'
+import axios from 'axios'
 
 const App = () => {
-    const [ persons, setPersons ] = useState([
-      { name: 'Arto Hellas' , number : '040-1233424' }
-    ]) 
+    const [ persons, setPersons ] = useState([]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber , setNewNumber] = useState('')
+    const [ filterName , setFilterName] = useState('')
   
+    useEffect(() => {
+      
+      axios.get('http://localhost:3001/persons')
+      .then(response =>
+         {
+           setPersons(response.data)
+         })
+    }, [])
+
+
     const addContact = (event) =>
     {
         event.preventDefault()
-        if((persons.findIndex((person) => person.name === newName)) !== -1)
+        if((persons.findIndex((person) => (person.name === newName) || (person.number === newNumber))) !== -1)
         {
             window.alert(`${newName} is already added to phonebook`)
+        }
+        else if(newName === '' || newNumber === '') 
+        {
+          window.alert(`Some entry input is empty`)
         }
         else
         {
@@ -27,31 +44,33 @@ const App = () => {
         setNewNumber('')
     }
 
+
     const handleNameChange = (event) =>
     {
         setNewName(event.target.value)
+        
     }
     const handleNumberChange = (event) =>
     {
-        setNewNumber(event.target.value)
+        setNewNumber(event.target.value)   
     }
+    const handleFilterNameChange = (event) =>
+    {
+        setFilterName(event.target.value)
+    }
+    
 
     return (
       <div>
         <h2>Phonebook</h2>
-        <form onSubmit={addContact}>
-          <div>
-            name: <input value={newName} onChange={handleNameChange}/> <br/>
-            number: <input value={newNumber} onChange={handleNumberChange} />
-          </div>
-          <div>
-            <button type="submit">add</button>
-          </div>
-        </form>
+        <Filter handleFilterNameChange = {handleFilterNameChange}/>
+        <h2>Add a new </h2> 
+        <PersonsForm 
+          addContact = {addContact} 
+          handleNameChange = {handleNameChange}
+          handleNumberChange = {handleNumberChange} />
         <h2>Numbers</h2>
-        {
-            persons.map((person) => <p key={person.name}>{person.name} {person.number}</p>)
-        }
+        <Persons persons={persons} filterName ={filterName}/>
       </div>
     )
   }
