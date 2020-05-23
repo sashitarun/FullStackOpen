@@ -1,11 +1,33 @@
 import React from 'react'
+import personService from './services/persons'
 
 function Persons({persons,filterName}) {
+
+    const contactDelete = ({person}) =>
+    {
+        console.log(person)
+       if(window.confirm(`Delete ${person.name} ?`))
+       {
+           console.log('Deleting ', person.name)
+           personService.deletePerson(person.id)
+           .then(person => console.log('Successfully deleted'))
+           .catch(error => console.log("Failed"))
+       }
+       else console.log('No')
+    }
+
+
     if(filterName === ''){
     return (
         <div>
             {
-                persons.map((person) => <p key={person.name}>{person.name} {person.number}</p>)
+                persons.map((person) => 
+                <p key={person.name}>
+                    {person.name} {person.number}
+                    <button onClick={() => contactDelete({person})}>
+                        delete
+                    </button>
+                </p>)
             }
         </div>
     )
