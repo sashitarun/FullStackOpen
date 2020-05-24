@@ -1,8 +1,9 @@
 import React from 'react'
 import CountryDetails from './CountryDetails'
-import ShowCountry from './ShowCountry'
 
-function Countries({countries,filterName}) {
+
+function Countries({countries,filterName,displayCountry}) {
+
 
     const filteredCountries = countries.filter((country) => 
     {
@@ -27,7 +28,10 @@ function Countries({countries,filterName}) {
         return(
             <div>
                 {
-                    filteredCountries.map(country => <ShowCountry key = {country.name} country = {country} />)
+                    filteredCountries.map(country => <p key={country.name}>
+                        {country.name} 
+                        <button onClick = {() => displayCountry(country)}> show </button>
+                    </p> )
                 }
             </div>
         )
@@ -36,7 +40,7 @@ function Countries({countries,filterName}) {
     else if(filteredCountries.length === 1)
     {
         const country = filteredCountries[0]
-        console.log(country)
+        //console.log(country)
         return(
             <div>
                 <CountryDetails country={country}/>
