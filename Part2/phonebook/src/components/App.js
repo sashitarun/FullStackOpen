@@ -9,6 +9,7 @@ const App = () => {
     const [ newName, setNewName ] = useState('')
     const [ newNumber , setNewNumber] = useState('')
     const [ filterName , setFilterName] = useState('')
+
   
     useEffect(() => {
       
@@ -19,13 +20,29 @@ const App = () => {
          })
     }, [])
 
-
     const addContact = (event) =>
     {
         event.preventDefault()
-        if((persons.findIndex((person) => (person.name === newName) || (person.number === newNumber))) !== -1)
+        event.target.reset()
+        if((persons.findIndex((person) => (person.name === newName)  && (person.number === newNumber))) !== -1)
         {
             window.alert(`${newName} is already added to phonebook`)
+        }
+        else if((persons.findIndex((person) => (person.name === newName)  && (person.number !== newNumber))) !== -1)
+        {
+            if(window.confirm(`${newName} is already added to phonebook , replace the old number with the new one ? `))
+            {
+                const person = persons.find((p) => p.name === newName)
+                const contactObject =
+                {
+                    name : newName,
+                    number : newNumber,
+                    id : person.id 
+                }
+                personService.update(person.id , contactObject)
+                .then(response => {setPersons(persons.map(p => p.id !== person.id ? p : contactObject ))})
+                //console.log(persons)
+            }   
         }
         else if(newName === '' || newNumber === '') 
         {
@@ -49,6 +66,10 @@ const App = () => {
         setNewNumber('')
     }
 
+    // const deleteContact = ({person}) =>
+    // {
+
+    // }
 
     const handleNameChange = (event) =>
     {
@@ -63,6 +84,7 @@ const App = () => {
     {
         setFilterName(event.target.value)
     }
+  
 
     return (
       <div>
@@ -74,7 +96,7 @@ const App = () => {
           handleNameChange = {handleNameChange}
           handleNumberChange = {handleNumberChange} />
         <h2>Numbers</h2>
-        <Persons persons={persons} filterName ={filterName} />
+        <Persons persons={persons} filterName ={filterName}/>
       </div>
     )
   }

@@ -14,6 +14,7 @@ function Persons({persons,filterName}) {
            .catch(error => console.log("Failed"))
        }
        else console.log('No')
+       window.location.reload(false)
     }
 
 
@@ -24,9 +25,7 @@ function Persons({persons,filterName}) {
                 persons.map((person) => 
                 <p key={person.name}>
                     {person.name} {person.number}
-                    <button onClick={() => contactDelete({person})}>
-                        delete
-                    </button>
+                    <button onClick={() => contactDelete({person})} > delete </button>
                 </p>)
             }
         </div>
@@ -49,7 +48,10 @@ function Persons({persons,filterName}) {
         return(
             <div>
                 {
-                    filteredPersons.map((person) => <p key={person.name}> {person.name} {person.number} </p>)
+                    filteredPersons.map((person) =>
+                     <p key={person.name}> 
+                     {person.name} {person.number} <button onClick={() => contactDelete({person})} > delete </button>
+                    </p>)
                 }
             </div>
         )
