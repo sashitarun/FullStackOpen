@@ -3,12 +3,14 @@ import Persons from './Persons'
 import PersonsForm from './PersonsForm'
 import Filter from './Filter'
 import personService from './services/persons'
+import Notification from './Notification'
 
 const App = () => {
     const [ persons, setPersons ] = useState([]) 
     const [ newName, setNewName ] = useState('')
     const [ newNumber , setNewNumber] = useState('')
     const [ filterName , setFilterName] = useState('')
+    const [ message, setMessage] =useState(null)
 
   
     useEffect(() => {
@@ -39,17 +41,18 @@ const App = () => {
                     number : newNumber,
                     id : person.id 
                 }
+                //console.log(person)
                 personService.update(person.id , contactObject)
                 .then(response => {setPersons(persons.map(p => p.id !== person.id ? p : contactObject ))})
-                //console.log(persons)
+                setMessage(`${newName}'s contact has been updated`)
+                setTimeout(() => {
+                  setMessage(null)
+                }, 3000)
             }   
-        }
-        else if(newName === '' || newNumber === '') 
-        {
-          window.alert(`Some entry input is empty`)
         }
         else
         {
+           // console.log(newName)
             const contactObject =
             {
                 name : newName,
@@ -59,11 +62,12 @@ const App = () => {
             personService.create(contactObject)
             .then(response =>
               setPersons(persons.concat(contactObject)))
+            setMessage(`${newName}'s contact has been created`)
+            setTimeout(() => {
+              setMessage(null)
+            }, 3000)
 
-            // setPersons(persons.concat(contactObject))
         }
-        setNewName('')
-        setNewNumber('')
     }
 
     // const deleteContact = ({person}) =>
@@ -89,6 +93,7 @@ const App = () => {
     return (
       <div>
         <h2>Phonebook</h2>
+        <Notification message={message} />
         <Filter handleFilterNameChange = {handleFilterNameChange}/>
         <h2>Add a new </h2> 
         <PersonsForm 
