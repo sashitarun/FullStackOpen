@@ -1,7 +1,7 @@
 import React from 'react'
 import './index.css'
 
-function Notification({message,errorMessage}) {
+function Notification({message}) {
     if(message !== null)
     return (
         <div className='message'>
