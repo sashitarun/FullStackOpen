@@ -1,21 +1,21 @@
 import React from 'react'
-import personService from './services/persons'
+//import personService from './services/persons'
 
-function Persons({persons,filterName}) {
+function Persons({persons,filterName,contactDelete}) {
 
-    const contactDelete = ({person}) =>
-    {
-        console.log(person)
-       if(window.confirm(`Delete ${person.name} ?`))
-       {
-           console.log('Deleting ', person.name)
-           personService.deletePerson(person.id)
-           .then(person => console.log('Successfully deleted'))
-           .catch(error => console.log("Failed"))
-       }
-       else console.log('No')
-       window.location.reload(false)
-    }
+    // const contactDelete = ({person}) =>
+    // {
+    //     console.log(person)
+    //    if(window.confirm(`Delete ${person.name} ?`))
+    //    {
+    //        console.log('Deleting ', person.name)
+    //        personService.deletePerson(person.id)
+    //        .then(person => console.log('Successfully deleted'))
+    //        .catch(error => console.log("Failed"))
+    //    }
+    //    else console.log('No')
+    //    window.location.reload(false)
+    // }
 
 
     if(filterName === ''){
@@ -25,7 +25,7 @@ function Persons({persons,filterName}) {
                 persons.map((person) => 
                 <p key={person.name}>
                     {person.name} {person.number}
-                    <button onClick={() => contactDelete({person})} > delete </button>
+                    <button onClick={() => contactDelete(person)} > delete </button>
                 </p>)
             }
         </div>
@@ -50,7 +50,7 @@ function Persons({persons,filterName}) {
                 {
                     filteredPersons.map((person) =>
                      <p key={person.name}> 
-                     {person.name} {person.number} <button onClick={() => contactDelete({person})} > delete </button>
+                     {person.name} {person.number} <button onClick={() => contactDelete(person)} > delete </button>
                     </p>)
                 }
             </div>

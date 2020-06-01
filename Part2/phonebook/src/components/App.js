@@ -70,10 +70,26 @@ const App = () => {
         }
     }
 
-    // const deleteContact = ({person}) =>
-    // {
-
-    // }
+    const deleteContact = (person) =>
+    {
+      // console.log(person)
+      // const name = person.name
+      // console.log(name)
+      if(window.confirm(`Delete ${person.name} ?`))
+         {
+             console.log('Deleting ', person.name)
+             personService.deletePerson(person.id)
+             .then(person => {
+                 console.log('Successfully deleted')
+                 personService.getAll()
+                  .then(person =>
+                    {
+                      setPersons(person)
+                    })
+              })
+             .catch(error => console.log("Failed"))
+         }
+    }
 
     const handleNameChange = (event) =>
     {
@@ -101,7 +117,7 @@ const App = () => {
           handleNameChange = {handleNameChange}
           handleNumberChange = {handleNumberChange} />
         <h2>Numbers</h2>
-        <Persons persons={persons} filterName ={filterName}/>
+        <Persons persons={persons} filterName ={filterName} contactDelete={deleteContact}/>
       </div>
     )
   }
