@@ -11,6 +11,7 @@ const App = () => {
     const [ newNumber , setNewNumber] = useState('')
     const [ filterName , setFilterName] = useState('')
     const [ message, setMessage] =useState(null)
+    const [ deleteMessage , setDeleteMessage] = useState(null)
 
   
     useEffect(() => {
@@ -88,6 +89,11 @@ const App = () => {
                     })
               })
              .catch(error => console.log("Failed"))
+             setDeleteMessage(`${person.name} is deleted from phonebook`)
+             setTimeout(() => {
+              setDeleteMessage(null)
+            }, 3000)
+
          }
     }
 
@@ -109,7 +115,7 @@ const App = () => {
     return (
       <div>
         <h2>Phonebook</h2>
-        <Notification message={message} />
+        <Notification message={message} deleteMessage={deleteMessage} />
         <Filter handleFilterNameChange = {handleFilterNameChange}/>
         <h2>Add a new </h2> 
         <PersonsForm 
