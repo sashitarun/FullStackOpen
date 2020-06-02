@@ -42,7 +42,6 @@ const App = () => {
                     number : newNumber,
                     id : person.id 
                 }
-                //console.log(person)
                 personService.update(person.id , contactObject)
                 .then(response => {setPersons(persons.map(p => p.id !== person.id ? p : contactObject ))})
                 setMessage(`${newName}'s contact has been updated`)
@@ -53,7 +52,6 @@ const App = () => {
         }
         else
         {
-           // console.log(newName)
             const contactObject =
             {
                 name : newName,
@@ -73,9 +71,6 @@ const App = () => {
 
     const deleteContact = (person) =>
     {
-      // console.log(person)
-      // const name = person.name
-      // console.log(name)
       if(window.confirm(`Delete ${person.name} ?`))
          {
              console.log('Deleting ', person.name)
@@ -93,7 +88,6 @@ const App = () => {
              setTimeout(() => {
               setDeleteMessage(null)
             }, 3000)
-
 
          }
     }
