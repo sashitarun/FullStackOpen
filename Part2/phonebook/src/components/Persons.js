@@ -10,6 +10,7 @@ function Persons({persons,filterName,contactDelete}) {
     //    {
     //        console.log('Deleting ', person.name)
     //        personService.deletePerson(person.id)
+
     //        .then(person => {
     //            console.log('Successfully deleted')
     //            persons.filter(p => p.id !== person.id)
@@ -17,6 +18,13 @@ function Persons({persons,filterName,contactDelete}) {
     //        .catch(error => console.log("Failed"))
     //    }
     //    else console.log('No')
+=======
+    //        .then(person => console.log('Successfully deleted'))
+    //        .catch(error => console.log("Failed"))
+    //    }
+    //    else console.log('No')
+    //    window.location.reload(false)
+
     // }
 
 
@@ -26,8 +34,12 @@ function Persons({persons,filterName,contactDelete}) {
             {
                 persons.map((person) => 
                 <p key={person.name}>
+
                     {person.name} {person.number}
                     <button onClick={() => contactDelete(person)} > delete </button>
+
+                    {person.name} {person.number} <button onClick={() => contactDelete(person)} > delete </button>
+
                 </p>)
             }
         </div>
