@@ -24,8 +24,7 @@ function Persons({persons,filterName,contactDelete}) {
             {
                 persons.map((person) => 
                 <p key={person.name}>
-                    {person.name} {person.number}
-                    <button onClick={() => contactDelete(person)} > delete </button>
+                    {person.name} {person.number} <button onClick={() => contactDelete(person)} > delete </button>
                 </p>)
             }
         </div>
