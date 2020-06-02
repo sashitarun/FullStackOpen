@@ -1,6 +1,10 @@
 import axios from 'axios'
 
+
+const baseurl = 'http://localhost:3002/persons'
+
 const baseurl = '/api/persons'
+
 
 const getAll = () =>
 {
