@@ -9,12 +9,9 @@ const blogHelper = require('./blog_helper')
 beforeEach(async ()=>
 {
     await Blog.deleteMany({})
-
-    let blogObject = new Blog(blogHelper.initialBlogs[0])
-    await blogObject.save()
-
-    blogObject =  new Blog(blogHelper.initialBlogs[1])
-    await blogObject.save()
+    const blogs = blogHelper.initialBlogs.map(bl => new Blog(bl))
+    const promiseArray = blogs.map(bl => bl.save())
+    await Promise.all(promiseArray) 
 })
 
 test('blogs are returned as json', async () => {
@@ -49,6 +46,57 @@ test('Check if blog is added', async () => {
     const authors = presentBlogs.map( b => b.author)
     expect(authors[2]).toBe('Robert C. Martin')
 })
+
+test('to check if id atrribute is present', async () => {
+
+    const presentBlogs = await blogHelper.blogsInDB()
+    expect(presentBlogs.map(b => b.id)).toBeDefined()    
+})
+
+test('to check whether , if a new blog with no likes attribute get added and the default likes is set to zero ', async () =>
+{
+    const newBlog = 
+    {
+        title: "Rage of Angels",
+        author: "Sidney Sheldon",
+        url: "https://www.goodreads.com/book/show/43328.Rage_of_Angels"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(200)
+    
+    const presentBlogs = await blogHelper.blogsInDB()
+    const len = blogHelper.initialBlogs.length
+    expect(presentBlogs[len].likes).toEqual(0)          
+})
+
+test('to check if status 400 comes when a blog without title/url when tried to add', async () =>
+{
+    const newBlog1 = 
+    {
+        title: "Rage of Angels",
+        author: "Sidney Sheldon"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog1)
+        .expect(400)
+    
+    const newBlog2 = 
+    {
+        author: "Sidney Sheldon",
+        url: "https://www.goodreads.com/book/show/43328.Rage_of_Angels"
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog2)
+        .expect(400)
+})
+
 
 afterAll(()=>
 {
