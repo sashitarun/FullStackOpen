@@ -9,6 +9,7 @@ const middleware = require('./utils/middleware')
 
 logger.info(`Connecting to port ${config.PORT}`)
 
+mongoose.set('useFindAndModify', false);
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         logger.info('connected to MongoDB')
