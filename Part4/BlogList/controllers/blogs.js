@@ -4,16 +4,6 @@ const jwt = require('jsonwebtoken')
 const Blog = require('../models/blog.js')
 const User = require('../models/user')
 
-const getTokenFrom = (request) => 
-{
-    const authorization = request.get('authorization')
-    if(authorization && authorization.toLowerCase().startsWith('bearer '))
-    {
-        return authorization.substring(7)
-    }
-    return null
-} 
-
 blogsRouter.get('/',async (request, response) => {
     
     const blogs = await Blog.find({}).populate('user',{blogs : 0})
@@ -23,9 +13,8 @@ blogsRouter.get('/',async (request, response) => {
 blogsRouter.post('/', async (request, response,next) => {
 
     const body = request.body
-    const token = getTokenFrom(request)
-    const decodedToken = jwt.verify(token,process.env.SECRET)
-    if(!token || !decodedToken.id)
+    const decodedToken = jwt.verify(request.token,process.env.SECRET)
+    if(!request.token || !decodedToken.id)
     {
         response.status(401).json(
             {
@@ -61,10 +50,34 @@ blogsRouter.post('/', async (request, response,next) => {
 
 blogsRouter.delete('/:id', async (request,response) =>
 {
+    const decodedToken = jwt.verify(request.token,process.env.SECRET)
+    if(!decodedToken.id && !request.token)
+    {
+        response.status(401).json(
+            {
+                error : "Invalid or Missing token"
+            }
+        )
+    }
+    const user = await User.findById(decodedToken.id)
+    const index = user.blogs.indexOf(request.params.id)
+    if(!(index > -1))
+    {
+        response.status(401).json(
+            {
+                error : "Wrong user for the blog"
+            }
+        )
+    }
     await Blog.findByIdAndRemove(request.params.id).then()
     {
+        
         response.status(204).end()
     }
+
+    // There's a issue here .. We are checking if the blog is written in the user generated from JWT Token
+    // And we are just deleting the blog but the reference ObjectID is still stored in the blogs array of the user
+    // Try solving the issue
 })
 
 blogsRouter.put('/:id' , async (request,response) =>
