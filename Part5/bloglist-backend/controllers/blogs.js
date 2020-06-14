@@ -48,7 +48,7 @@ blogsRouter.post('/', async (request, response,next) => {
     }
 })
 
-blogsRouter.delete('/:id', async (request,response) =>
+blogsRouter.delete('/:id', async (request,response,next) =>
 {
     const decodedToken = jwt.verify(request.token,process.env.SECRET)
     if(!decodedToken.id && !request.token)
@@ -73,11 +73,8 @@ blogsRouter.delete('/:id', async (request,response) =>
     {
         response.status(204).end()
     }
-    
-
-    // There's a issue here .. We are checking if the blog is written in the user generated from JWT Token
-    // And we are just deleting the blog but the reference ObjectID is still stored in the blogs array of the user
-    // Try solving the issue
+    user.blogs.splice(index,1)
+    await user.save().catch(error => next(error))
 })
 
 blogsRouter.put('/:id' , async (request,response) =>
