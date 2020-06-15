@@ -18,7 +18,7 @@ const App = () => {
 
   useEffect( () => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes) )
     )
   }, [])
 
@@ -83,6 +83,20 @@ const App = () => {
     }, 5000);
   }
 
+  const increaseLikes = (blogObject) =>
+  {
+    const newBlog ={
+      title : blogObject.title,
+      author : blogObject.author,
+      url : blogObject.url,
+      likes : blogObject.likes + 1
+    }
+    blogService.update(blogObject.id,newBlog)
+    blogService.getAll().then(blogs =>
+      setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
+
+  }
+
   const loginForm = () =>
   {
     return(
@@ -93,7 +107,7 @@ const App = () => {
             username <input type='text' onChange={handleUsernameChange}></input>
           </div>
           <div>
-            password <input type='password' onChange={handlePasswordChange}></input>
+            password <input type='password' autoComplete='on' onChange={handlePasswordChange}></input>
           </div>
           <div>
             <button type='submit'> login </button>
@@ -116,7 +130,7 @@ const App = () => {
         </Togglable>
         {blogs.map(blog => {
           return(
-          <Blog key={blog.id}  blog={blog} />
+          <Blog key={blog.id}  blog={blog} like={increaseLikes} />
           )
         }
         )}
