@@ -1,6 +1,6 @@
 import React,{useState} from 'react'
 
-const Blog = ({ blog, like }) =>{
+const Blog = ({ blog, like, deleteBlog}) =>{
 
 const [toView,setToView] = useState(false)
 
@@ -31,6 +31,8 @@ return(
       <button onClick={toggleView}>cancel</button> 
       <p>{blog.url}</p>
       <p>likes : {blog.likes} <button onClick={() => like(blog)}>like</button></p>
+      <p>{blog.user.name} created this</p>
+      <button onClick={() => deleteBlog(blog)}>delete</button>
     </div>
   </div>
 ) }

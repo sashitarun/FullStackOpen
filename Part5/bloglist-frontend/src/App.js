@@ -94,7 +94,27 @@ const App = () => {
     blogService.update(blogObject.id,newBlog)
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
+  }
 
+  const deleteBlog = (blogObject) =>
+  {
+    if(window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`))
+    {
+      if(user.username === blogObject.user.username){
+      blogService.remove(blogObject.id)
+                 .then(() => 
+                  {
+                    blogService.getAll().then(blogs =>
+                      setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
+                  })
+      }
+      else{
+        setErrorMessage('Blog not created by the login user, so cant delete ( Try Refreshing and Deleting )')
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000);
+      }
+    }
   }
 
   const loginForm = () =>
@@ -123,14 +143,14 @@ const App = () => {
     return(
       <div>
         <h2>blogs</h2>
-        <p>{user.username} is logged in </p> <button onClick={logout}> logout </button>
+        <p>{user.name} is logged in </p> <button onClick={logout}> logout </button>
         <h2>create a new blog</h2>
         <Togglable buttonLabel='create' ref={blogFormRef}>
           <Create token={user.token} createBlog = {addBlog}/>
         </Togglable>
         {blogs.map(blog => {
           return(
-          <Blog key={blog.id}  blog={blog} like={increaseLikes} />
+          <Blog key={blog.id}  blog={blog} like={increaseLikes} deleteBlog={deleteBlog}/>
           )
         }
         )}
