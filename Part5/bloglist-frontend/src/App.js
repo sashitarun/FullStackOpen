@@ -16,7 +16,7 @@ const App = () => {
 
   const blogFormRef = React.createRef()
 
-  useEffect(() => {
+  useEffect( () => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
     )
@@ -71,15 +71,12 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const addBlog = (blogObject) =>
+  const addBlog =(blogObject) =>
   {
     blogService.setToken(user.token)
     blogFormRef.current.toggleVisibility()
     blogService.create(blogObject)
-               .then(returnedObject => 
-                {
-                  setBlogs(blogs.concat(returnedObject))
-                })
+               .then(returnedObject => setBlogs(blogs.concat(returnedObject)))
     setMessage(`A new blog ${blogObject.title} by ${blogObject.author} is added`)
     setTimeout(() => {
       setMessage(null)

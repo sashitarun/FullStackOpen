@@ -19,7 +19,6 @@ const Create = ({createBlog}) => {
     setUrl(event.target.value)
     }
 
-
     const addBlog = (event) =>
     {
         event.preventDefault()
@@ -28,19 +27,20 @@ const Create = ({createBlog}) => {
             author : author,
             url : url
         })
-        //blogService.create(newBlog)
         setTitle('')
         setAuthor('')
         setUrl('')
     }
 
     return (
-        <form onSubmit={addBlog} >
-            title : <input onChange={handleTitleChange}></input> <br/>
-            author : <input onChange={handleAuthorChange}></input> <br/>
-            url : <input onChange={handleUrlChange}></input> <br/>
-            <button type='submit'> create </button>
-        </form>
+        <div>
+            <form onSubmit={addBlog} >
+                title : <input onChange={handleTitleChange} value={title}></input> <br/>
+                author : <input onChange={handleAuthorChange} value={author}></input> <br/>
+                url : <input onChange={handleUrlChange} value={url}></input> <br/>
+                <button type='submit'> create </button>
+            </form>
+        </div>
     )
 }
 

@@ -1,8 +1,38 @@
-import React from 'react'
-const Blog = ({ blog }) => (
-  <div>
-    {blog.title} {blog.author}
+import React,{useState} from 'react'
+
+const Blog = ({ blog }) =>{
+
+const [toView,setToView] = useState(false)
+
+const hideWhenVisible = { display: toView ? 'none' : '' }
+const showWhenVisible = { display: toView ? '' : 'none' }
+
+const blogStyle = {
+  paddingTop: 10,
+  paddingLeft: 2,
+  border: 'solid',
+  borderWidth: 1,
+  marginBottom: 5
+}
+
+const toggleView = () =>
+{
+  setToView(!toView)
+}
+
+return(
+  <div style={blogStyle}>
+    <div style={hideWhenVisible}>
+      {blog.title} {blog.author} 
+      <button onClick={toggleView}>view</button>
+    </div>
+    <div style={showWhenVisible}>
+      {blog.title} {blog.author} 
+      <button onClick={toggleView}>cancel</button> 
+      <p>{blog.url}</p>
+      <p>likes : {blog.likes} <button>like</button></p>
+    </div>
   </div>
-)
+) }
 
 export default Blog
