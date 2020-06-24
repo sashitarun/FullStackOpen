@@ -1,13 +1,14 @@
 import React from 'react'
 import './index.css'
 
-function Notification({message,errorMessage}) {
-    if(message !== null)
-    return (
-        <div className='message'>
-            {message}
-        </div>
-    )
+function Notification({ message,errorMessage }) {
+    if(message !== null){
+        return (
+            <div className='message'>
+                {message}
+            </div>
+        )
+    }
     if(errorMessage !== null)
     {
         return(

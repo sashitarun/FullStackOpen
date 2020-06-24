@@ -2,23 +2,23 @@ import React,{useState} from 'react'
 
 const Blog = ({ blog, like, deleteBlog}) =>{
 
-const [toView,setToView] = useState(false)
+  const [toView,setToView] = useState(false)
 
-const hideWhenVisible = { display: toView ? 'none' : '' }
-const showWhenVisible = { display: toView ? '' : 'none' }
+  const hideWhenVisible = { display: toView ? 'none' : '' }
+  const showWhenVisible = { display: toView ? '' : 'none' }
 
-const blogStyle = {
-  paddingTop: 10,
-  paddingLeft: 2,
-  border: 'solid',
-  borderWidth: 1,
-  marginBottom: 5
-}
+  const blogStyle = {
+    paddingTop: 10,
+    paddingLeft: 2,
+    border: 'solid',
+    borderWidth: 1,
+    marginBottom: 5
+  }
 
-const toggleView = () =>
-{
-  setToView(!toView)
-}
+  const toggleView = () =>
+  {
+    setToView(!toView)
+  }
 
 return(
   <div style={blogStyle}>

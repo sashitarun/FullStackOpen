@@ -1,6 +1,6 @@
-import React,{useState } from 'react'
+import React,{ useState } from 'react'
 
-const Create = ({createBlog}) => {
+const Create = ({ createBlog }) => {
 
     const [title,setTitle] = useState('')
     const [author,setAuthor] = useState('')
@@ -8,15 +8,15 @@ const Create = ({createBlog}) => {
 
     const handleTitleChange = (event) =>
     {
-    setTitle(event.target.value)
+        setTitle(event.target.value)
     }
     const handleAuthorChange = (event) =>
     {
-    setAuthor(event.target.value)
+        setAuthor(event.target.value)
     }
     const handleUrlChange = (event) =>
     {
-    setUrl(event.target.value)
+        setUrl(event.target.value)
     }
 
     const addBlog = (event) =>
