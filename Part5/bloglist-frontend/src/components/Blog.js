@@ -1,11 +1,9 @@
-import React,{useState} from 'react'
+import React from 'react'
+import Togglable from './Togglable'
 
-const Blog = ({ blog, like, deleteBlog}) =>{
+const Blog = (props) =>{
 
-  const [toView,setToView] = useState(false)
-
-  const hideWhenVisible = { display: toView ? 'none' : '' }
-  const showWhenVisible = { display: toView ? '' : 'none' }
+  const blog = props.blog
 
   const blogStyle = {
     paddingTop: 10,
@@ -15,25 +13,14 @@ const Blog = ({ blog, like, deleteBlog}) =>{
     marginBottom: 5
   }
 
-  const toggleView = () =>
-  {
-    setToView(!toView)
-  }
-
 return(
   <div style={blogStyle}>
-    <div style={hideWhenVisible}>
-      {blog.title} {blog.author} 
-      <button onClick={toggleView}>view</button>
-    </div>
-    <div style={showWhenVisible}>
-      {blog.title} {blog.author} 
-      <button onClick={toggleView}>cancel</button> 
-      <p>{blog.url}</p>
-      <p>likes : {blog.likes} <button onClick={() => like(blog)}>like</button></p>
+    {blog.title} {blog.author}
+    <Togglable buttonLabel='view'>
+      <p>{blog.url} </p>
       <p>{blog.user.name} created this</p>
-      <button onClick={() => deleteBlog(blog)}>delete</button>
-    </div>
+      {props.children}
+    </Togglable>
   </div>
 ) }
 
