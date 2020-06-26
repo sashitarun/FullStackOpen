@@ -35,10 +35,10 @@ const Create = ({ createBlog }) => {
     return (
         <div>
             <form onSubmit={addBlog} >
-                title : <input onChange={handleTitleChange} value={title}></input> <br/>
-                author : <input onChange={handleAuthorChange} value={author}></input> <br/>
-                url : <input onChange={handleUrlChange} value={url}></input> <br/>
-                <button type='submit'> create </button>
+                title : <input id='title' onChange={handleTitleChange} value={title}></input> <br/>
+                author : <input id='author' onChange={handleAuthorChange} value={author}></input> <br/>
+                url : <input id='url' onChange={handleUrlChange} value={url}></input> <br/>
+                <button id='createBlog' type='submit'> create </button>
             </form>
         </div>
     )

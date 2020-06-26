@@ -124,10 +124,10 @@ const App = () => {
         <h2>login</h2>
         <form onSubmit={Handlelogin}>
           <div>
-            username <input type='text' onChange={handleUsernameChange}></input>
+            username <input id='username' type='text' onChange={handleUsernameChange}></input>
           </div>
           <div>
-            password <input type='password' autoComplete='on' onChange={handlePasswordChange}></input>
+            password <input id ='password' type='password' autoComplete='on' onChange={handlePasswordChange}></input>
           </div>
           <div>
             <button type='submit'> login </button>
