@@ -29,7 +29,7 @@ blogsRouter.post('/', async (request, response,next) => {
         author : body.author,
         url : body.url,
         likes : body.likes,
-        user : user._id
+        user : user
     })
 
     if(typeof(blog.url) === "undefined" || typeof(blog.title) === "undefined")

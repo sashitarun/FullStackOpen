@@ -77,25 +77,43 @@ describe('Blog app', function(){
                 cy.get('button').contains('view').click()
 
                 cy.contains('likes : 0')
-                cy.get('button').contains('like').click().click() // Need to Double Click
+                cy.get('button').contains('like').click()// Need to Double Click
 
                 cy.contains('likes : 1')
             })
 
-            it('A blog can be deleted',function(){
+            it('A blog can be deleted',function(){ 
                 cy.get('button').contains('view').click()
-                cy.contains('likes : 0')
-                cy.get('button').contains('like').click().click()// Need to Double Click
-                cy.contains('likes : 1')
-
-                // Above Steps are done so that the username get updated on the blog 
                 cy.get('button').contains('delete').click()
+                cy.on('window:confirm',() => true)
+                cy.contains('test-title blog has been deleted')
+            })
+
+            it('Trying to delete blog with different user',function() {
+                cy.get('button').contains('logout').click()
+                const testuser1 =
+                {
+                    name : 'testuser1',
+                    username : 'tester1',
+                    password : 'pass'
+                }
+                cy.request('POST','http://localhost:3001/api/users/',testuser1)
+                cy.visit('http://localhost:3001')
+                cy.get('#username').type('tester1')
+                cy.get('#password').type('pass')
+                cy.get('button').contains('login').click()
+
+                cy.contains('testuser1 is logged in')
+
+                cy.get('button').contains('view').click()
+                cy.get('button').contains('delete').click()
+                cy.on('window:confirm',() => true)
+
+                cy.contains('Blog not created by the login user, so cant delete')
 
             })
         })
         
     })
-    
-    
-    
 })
+

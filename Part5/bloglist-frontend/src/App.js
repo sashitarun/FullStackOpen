@@ -22,12 +22,12 @@ const App = () => {
     )
   }, [])
 
-  useEffect(() => {
+  useEffect(async () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token)
+      await blogService.setToken(user.token)
     }
   }, [])
 
@@ -43,7 +43,7 @@ const App = () => {
           window.localStorage.setItem(
           'loggedBlogappUser', JSON.stringify(loginuser)
           ) 
-          blogService.setToken(loginuser.token)
+          await blogService.setToken(loginuser.token)
           setUser(loginuser)
           setUsername('')
           setPassword('')
@@ -71,19 +71,19 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const addBlog =(blogObject) =>
+  const addBlog = async (blogObject) =>
   {
-    blogService.setToken(user.token)
+    await blogService.setToken(user.token)
     blogFormRef.current.toggleVisibility()
-    blogService.create(blogObject)
-               .then(returnedObject => setBlogs(blogs.concat(returnedObject)))
+    const returnedObject = await blogService.create(blogObject)
+    setBlogs(blogs.concat(returnedObject)) 
     setMessage(`A new blog ${blogObject.title} by ${blogObject.author} is added`)
     setTimeout(() => {
       setMessage(null)
     }, 5000);
   }
 
-  const increaseLikes = (blogObject) =>
+  const increaseLikes = async (blogObject) =>
   {
     const newBlog ={
       title : blogObject.title,
@@ -91,25 +91,28 @@ const App = () => {
       url : blogObject.url,
       likes : blogObject.likes + 1
     }
-    blogService.update(blogObject.id,newBlog)
+    await blogService.update(blogObject.id,newBlog)
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
   }
 
-  const deleteBlog = (blogObject) =>
+  const deleteBlog = async (blogObject) =>
   {
     if(window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`))
     {
+      const title = blogObject.title
       if(user.username === blogObject.user.username){
-      blogService.remove(blogObject.id)
-                 .then(() => 
-                  {
-                    blogService.getAll().then(blogs =>
-                      setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
-                  })
+      await blogService.remove(blogObject.id)
+      blogService.getAll().then(blogs =>
+        setBlogs( blogs.sort((b1,b2)=> b2.likes - b1.likes)))
+        setErrorMessage(`${title} blog has been deleted`)
+        setTimeout(() => 
+        {
+          setErrorMessage(null)
+        },5000)
       }
       else{
-        setErrorMessage('Blog not created by the login user, so cant delete ( Try Refreshing and Deleting )')
+        setErrorMessage('Blog not created by the login user, so cant delete')
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000);
@@ -150,7 +153,7 @@ const App = () => {
         </Togglable>
         {blogs.map(blog => {
           return(
-          <Blog key={blog.id}  blog={blog} like={increaseLikes} deleteBlog={deleteBlog}>
+          <Blog key={blog.id}  blog={blog}>
             <p>likes : {blog.likes} <button onClick={() => increaseLikes(blog)}>like</button></p>
             <button onClick={() => deleteBlog(blog)}>delete</button>
           </Blog>
