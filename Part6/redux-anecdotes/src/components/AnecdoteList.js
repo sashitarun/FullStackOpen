@@ -1,32 +1,33 @@
 import React from 'react'
-import { connect } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 
-const AnecdoteList = (props) => {
+const AnecdoteList = () => {
 
+    const anecdotes = useSelector(state => state.anecdotes)
+    const filter = useSelector(state => state.filter)
+    const dispatch = useDispatch()
 
     const vote = (anecdote) => {
         
-        //dispatch(addVote(anecdote))
-        props.addVote(anecdote)
-        //dispatch(setNotification(`you voted '${anecdote.content}'`,5000))
-        props.setNotification(anecdote)
+        dispatch(addVote(anecdote))
+        dispatch(setNotification(`you voted '${anecdote.content}'`,5000))
     }
 
-    const filteredAnecdotes = props.anecdotes.filter( anecdote =>
+    const filteredAnecdotes = anecdotes.filter( anecdote =>
     {
         const anec_allsmall = (anecdote.content).toLowerCase()
-        const filter_allsmall = props.filter.toLowerCase()
+        const filter_allsmall = filter.toLowerCase()
         if(anec_allsmall.includes(filter_allsmall)) return anecdote
         else return null
     })
 
-    if(props.filter === ''){
+    if(filter === ''){
         return (
             <div>
-                {props.anecdotes.map(anecdote =>
+                {anecdotes.map(anecdote =>
                     <div key={anecdote.id}>
                         <div>
                             {anecdote.content}
@@ -58,17 +59,5 @@ const AnecdoteList = (props) => {
         )
     }
 }
-const mapStateToProps = (state) => {
-    return{
-        anecdotes : state.anecdotes,
-        filter : state.filter
-    }
-}
-const mapDispatchToProps = (state) => {
-    return{
-        addVote : addVote,
-        setNotification : setNotification
-    }
-}
-const ConnectedAnecdoteList = connect(mapStateToProps,mapDispatchToProps)(AnecdoteList)
-export default ConnectedAnecdoteList
+
+export default AnecdoteList
