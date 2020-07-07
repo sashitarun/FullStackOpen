@@ -1,5 +1,4 @@
 
-const getId = () => (100000 * Math.random()).toFixed(0)
 
 export const addVote = (id) =>
 {
@@ -10,11 +9,11 @@ export const addVote = (id) =>
   )
 }
 
-export const addNewAnecdote = (content) =>
+export const addNewAnecdote = (anecdote) =>
 {
   return({
     type : 'ADD_ANECDOTE',
-    data : {content}
+    data : {anecdote}
   })
 }
 
@@ -41,12 +40,7 @@ const anecdoteReducer = (state = [], action) => {
       const sortedState = newstate.sort((a1,a2) => a2.votes - a1.votes)
       return sortedState
     case 'ADD_ANECDOTE':
-      const anecdote_content = action.data.content
-      const newAnecdote = {
-        content : anecdote_content,
-        id : getId(),
-        votes : 0
-      }
+      const newAnecdote = action.data.anecdote
       return state.concat(newAnecdote)
     default : return state
   }
