@@ -1,8 +1,8 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { addVote } from '../reducers/anecdoteReducer'
-import { voteNotification , clearNotification } from '../reducers/notificationReducer'
-import AnecdoteService from '../services/anecdotes'
+import { setNotification } from '../reducers/notificationReducer'
+
 
 const AnecdoteList = () => {
 
@@ -12,12 +12,8 @@ const AnecdoteList = () => {
 
     const vote = (anecdote) => {
         
-        AnecdoteService.update(anecdote) // This is to update backend
-        dispatch(addVote(anecdote.id)) // this is to update frontend
-        dispatch(voteNotification(anecdote.content))
-        setTimeout(() => {
-            dispatch(clearNotification())
-        }, 5000);
+        dispatch(addVote(anecdote))
+        dispatch(setNotification(`you voted '${anecdote.content}'`,5000))
     }
 
     const filteredAnecdotes = anecdotes.filter( anecdote =>
