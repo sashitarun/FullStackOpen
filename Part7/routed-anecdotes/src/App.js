@@ -61,23 +61,33 @@ const Footer = () => (
   </div>
 )
 
+const useField = (type) => {
+  const [value,setValue] = useState('')
+  
+  const onChange = (event) => setValue(event.target.value)
+
+  const reset = () => setValue('')
+  return { reset, value, type , onChange }
+}
+
+const Input = (props) => {
+  const {reset, ...others} = props
+  return <input {...others} />
+}
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const history = useHistory()
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content : content.value,
+      author : author.value,
+      info : info.value,
       votes: 0
     })
-    setAuthor('')
-    setContent('')
-    setInfo('')
     history.push('/')
   }
 
@@ -86,19 +96,24 @@ const CreateNew = (props) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          content : 
+          <Input {...content} />
         </div>
         <div>
-          author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          author :
+          <Input {...author} />
         </div>
         <div>
-          url for more info
-          <input name='info' value={info} onChange={(e)=> setInfo(e.target.value)} />
+          url for more info : 
+          <Input {...info} />
         </div>
         <button>create</button>
       </form>
+      <button onClick={() => { 
+          content.reset()
+          author.reset()
+          info.reset()
+        }}>reset</button>
     </div>
   )
 
