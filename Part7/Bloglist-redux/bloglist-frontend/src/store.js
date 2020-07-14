@@ -3,18 +3,18 @@ import thunk from 'redux-thunk'
 import { composeWithDevTools } from 'redux-devtools-extension'
 
 import blogReducer from './reducers/blogReducer'
-import usernameReducer from './reducers/usernameReducer'
-import passwordReducer from './reducers/passwordReducer'
 import userReducer from './reducers/userReducer'
-import loginReducer from './reducers/loginReducer'
+import usersReducer from './reducers/usersReducer'
+import createDetails from './reducers/createDetails'
+import loginDetails from './reducers/loginDetails'
 
 
 const reducer = combineReducers({ 
   blogs : blogReducer,
-  username : usernameReducer,
-  password : passwordReducer,
   user : userReducer,
-  loginUser : loginReducer
+  users : usersReducer,
+  createDetails : createDetails,
+  loginDetails : loginDetails
 })
 
 const store = createStore(reducer,composeWithDevTools(applyMiddleware(thunk)))

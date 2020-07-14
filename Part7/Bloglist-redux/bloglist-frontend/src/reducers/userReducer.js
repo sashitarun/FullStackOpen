@@ -1,7 +1,3 @@
-import loginService from "../services/login"
-import blogService from '../services/blogs'
-
-
 export const setUser = (userObject) => 
 {
     if(userObject === null)

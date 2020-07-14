@@ -1,43 +1,39 @@
-import React,{ useState } from 'react'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { changeTitle, changeAuthor, changeUrl } from '../reducers/createDetails'
 
 const Create = ({ createBlog }) => {
 
-    const [title,setTitle] = useState('')
-    const [author,setAuthor] = useState('')
-    const [url,setUrl]= useState('')
-
+    const dispatch = useDispatch()
+    const createDetails = useSelector(state => state.createDetails)
     const handleTitleChange = (event) =>
     {
-        setTitle(event.target.value)
+        dispatch(changeTitle(event.target.value))
     }
     const handleAuthorChange = (event) =>
     {
-        setAuthor(event.target.value)
+        dispatch(changeAuthor(event.target.value))
     }
     const handleUrlChange = (event) =>
     {
-        setUrl(event.target.value)
+        dispatch(changeUrl(event.target.value))
     }
 
     const addBlog = (event) =>
     {
         event.preventDefault()
-        createBlog({
-            title : title,
-            author : author,
-            url : url
-        })
-        setTitle('')
-        setAuthor('')
-        setUrl('')
+        createBlog(createDetails)
+        dispatch(changeTitle(''))
+        dispatch(changeAuthor(''))
+        dispatch(changeUrl(''))
     }
 
     return (
         <div>
             <form onSubmit={addBlog} >
-                title : <input id='title' onChange={handleTitleChange} value={title}></input> <br/>
-                author : <input id='author' onChange={handleAuthorChange} value={author}></input> <br/>
-                url : <input id='url' onChange={handleUrlChange} value={url}></input> <br/>
+                title : <input id='title' onChange={handleTitleChange} ></input> <br/>
+                author : <input id='author' onChange={handleAuthorChange} ></input> <br/>
+                url : <input id='url' onChange={handleUrlChange} ></input> <br/>
                 <button id='createBlog' type='submit'> create </button>
             </form>
         </div>

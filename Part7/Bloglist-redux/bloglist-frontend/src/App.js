@@ -4,6 +4,7 @@ import { initialiseBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import BlogForm from './components/BlogForm'
 import LoginForm from './components/LoginForm'
+import { allUsers } from './reducers/usersReducer'
 
 const App = () => {
 
@@ -13,6 +14,7 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initialiseBlogs())
+    dispatch(allUsers())
   },[dispatch])
 
   useEffect( async () => {
@@ -24,7 +26,7 @@ const App = () => {
   }, [dispatch])
 
   return (
-    <div>
+    <div className='container'>
       {
         user === null ? <LoginForm /> : <BlogForm />
       }

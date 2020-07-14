@@ -1,21 +1,35 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setUsername } from '../reducers/usernameReducer'
-import { setPassword } from '../reducers/passwordReducer'
-import { tryLogin } from '../reducers/loginReducer'
-
+import { setUsername } from '../reducers/loginDetails'
+import { setPassword } from '../reducers/loginDetails'
+import { Button } from 'react-bootstrap'
+import loginService from '../services/login'
+import blogService from '../services/blogs'
+import { setUser } from '../reducers/userReducer'
 
 function LoginForm() {
 
     const dispatch = useDispatch()
-    const username = useSelector(state => state.username)
-    const password = useSelector(state => state.password)
+    const loginDetails = useSelector(state => state.loginDetails)
+    const username = loginDetails.username
+    const password = loginDetails.password
 
     const Handlelogin =  async (event) =>
     {
         event.preventDefault()
         
-        dispatch(tryLogin({username : username, password : password}))
+        const loginuser = await loginService.login({username : username, password : password})
+        if(loginuser.username === username)
+        {
+            window.localStorage.setItem('loggedBlogappUser',JSON.stringify(loginuser))
+            dispatch(setUser(loginuser))
+            dispatch(setUsername(''))
+            dispatch(setPassword(''))
+            await blogService.setToken(loginuser.token)
+        }
+        else{
+            console.log('Wrong Credentials')
+        }
     }
 
     const handleUsernameChange = (event) =>
@@ -28,16 +42,16 @@ function LoginForm() {
     }
     return (
         <div>
-           <h2>login</h2>
+           <h2>Login</h2>
             <form onSubmit={Handlelogin}>
             <div>
-                username <input id='username' type='text' onChange={handleUsernameChange}></input>
+                Username <input id='username' type='text' onChange={handleUsernameChange}></input>
             </div>
             <div>
-                password <input id ='password' type='password' autoComplete='on' onChange={handlePasswordChange}></input>
+                Password <input id ='password' type='password' autoComplete='on' onChange={handlePasswordChange}></input>
             </div>
             <div>
-                <button type='submit'> login </button>
+                <Button variant='secondary' type='submit'>login</Button>
             </div>
             </form>
         </div>

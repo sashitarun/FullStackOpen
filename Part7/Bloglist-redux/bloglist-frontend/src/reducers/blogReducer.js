@@ -66,7 +66,9 @@ export const deleteBlog = (blogObject , user) => {
 const blogReducer = (state = [], action) => {
     switch(action.type){
         case 'INITIALISE':
-            return action.data.presentBlogs
+            const presentState = action.data.presentBlogs
+            let sortedState = presentState.sort((b1,b2) => b2.likes - b1.likes)
+            return sortedState
         case 'ADD_BLOG':
             const newBlog = action.data.newBlog
             return state.concat(newBlog)
@@ -75,7 +77,7 @@ const blogReducer = (state = [], action) => {
             const requiredBlog = state.find(blog => blog.id === id)
             const changedBlog = {...requiredBlog,likes : requiredBlog.likes + 1}
             const newState = state.map(blog => blog.id === id ? changedBlog : blog)
-            const sortedState = newState.sort((b1,b2) => b2.likes - b1.votes)
+            sortedState = newState.sort((b1,b2) => b2.likes - b1.likes)
             return sortedState
         case 'DELETE_BLOG':
             const blogid = action.data.id
