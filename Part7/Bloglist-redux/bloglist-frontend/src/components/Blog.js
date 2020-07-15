@@ -1,5 +1,5 @@
 import React from 'react'
-import Togglable from './Togglable'
+import { Link } from 'react-router-dom'
 
 const Blog = (props) =>{
 
@@ -15,12 +15,7 @@ const Blog = (props) =>{
 
 return(
   <div style={blogStyle}>
-    {blog.title} {blog.author}
-    <Togglable buttonLabel='view'>
-      <p>{blog.url} </p>
-      <p>{blog.user.name} created this</p>
-      {props.children}
-    </Togglable>
+    <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link>
   </div>
 ) }
 

@@ -39,6 +39,19 @@ export const addLike = (id,blogObject) => {
     }
 }
 
+export const addNewComment = (id,blogObject) => {
+    return async dispatch => {
+        const updatedBlog = await blogService.update(id,blogObject)
+        dispatch({
+            type : 'ADD_COMMENT',
+            data : {
+                comments : updatedBlog.comments,
+                id : updatedBlog.id
+            }
+        })
+    }
+}
+
 export const deleteBlog = (blogObject , user) => {
     return async dispatch => {
         if(window.confirm(`Remove blog ${blogObject.title} by ${blogObject.author}`))
@@ -73,12 +86,18 @@ const blogReducer = (state = [], action) => {
             const newBlog = action.data.newBlog
             return state.concat(newBlog)
         case 'ADD_LIKE':
-            const id = action.data.id
-            const requiredBlog = state.find(blog => blog.id === id)
-            const changedBlog = {...requiredBlog,likes : requiredBlog.likes + 1}
-            const newState = state.map(blog => blog.id === id ? changedBlog : blog)
+            let id = action.data.id
+            let requiredBlog = state.find(blog => blog.id === id)
+            let changedBlog = {...requiredBlog,likes : requiredBlog.likes + 1}
+            let newState = state.map(blog => blog.id === id ? changedBlog : blog)
             sortedState = newState.sort((b1,b2) => b2.likes - b1.likes)
             return sortedState
+        case 'ADD_COMMENT':
+            id = action.data.id
+            requiredBlog = state.find(blog => blog.id === id)
+            changedBlog = {...requiredBlog,comments : action.data.comments}
+            newState = state.map(blog => blog.id === id ? changedBlog : blog)
+            return newState
         case 'DELETE_BLOG':
             const blogid = action.data.id
             const changedBlogs = state.filter(blog => blog.id !== blogid)

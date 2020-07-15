@@ -29,6 +29,7 @@ blogsRouter.post('/', async (request, response,next) => {
         author : body.author,
         url : body.url,
         likes : body.likes,
+        comments : body.comments,
         user : user
     })
 
@@ -86,7 +87,8 @@ blogsRouter.put('/:id' , async (request,response) =>
         title : body.title,
         author : body.author,
         url : body.url,
-        likes : body.likes
+        likes : body.likes,
+        comments : body.comments
     }
 
     await Blog.findByIdAndUpdate(request.params.id , updatedBlog , {new : true})
