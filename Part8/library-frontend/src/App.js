@@ -9,8 +9,6 @@ import { ALL_AUTHORS,ALL_BOOKS } from './queries'
 const App = () => {
   const [page, setPage] = useState('authors')
 
- 
-
   const authors_result = useQuery(ALL_AUTHORS)
   const books_result = useQuery(ALL_BOOKS)
 

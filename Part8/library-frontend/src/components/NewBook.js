@@ -21,7 +21,7 @@ const NewBook = (props) => {
   const submit = async (event) => {
     event.preventDefault()
     
-    addBook({ variables : {title,author,
+    addBook({ variables : {title,authorName : author,
       published : Number(published),genres} })
 
     setTitle('')
