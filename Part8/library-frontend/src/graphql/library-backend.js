@@ -213,7 +213,7 @@ const resolvers = {
       }
       const book = new Book({...args , author : author})
       try{
-        await book.save
+        await book.save()
       } catch(error){
         throw new UserInputError(error.message , {
           invalidArgs : args
@@ -232,7 +232,6 @@ const resolvers = {
 
         if(requiredAuthor)
         {
-            console.log('required Author : ', requiredAuthor)
             await Author.update({name : args.name} , { $set : { born : args.setBornTo}})
             const author = await Author.findOne({name : args.name})
             return author
