@@ -162,7 +162,7 @@ const resolvers = {
           if(args.author && !args.genre)
           {
               const author = await Author.findOne({name : args.name})
-              const filteredBooks = await Book.find({author : author._id})
+              const filteredBooks = await Book.find({author : { name : author.name}})
               return filteredBooks
           }
           // if( args.genre && !args.author)
@@ -176,7 +176,7 @@ const resolvers = {
           //   filteredBooks = filteredBooks.filter(book => book.genres.find(g => g === args.genre))
           //   return filteredBooks
           // }
-          return Book.find({})
+          return Book.find({}).populate('author')
       },
       allAuthors : async () =>{
         const allAuthors = await Author.find({})
