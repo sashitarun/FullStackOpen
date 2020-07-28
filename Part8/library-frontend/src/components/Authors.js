@@ -1,15 +1,27 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { CHANGE_YEAR, ALL_AUTHORS } from '../queries'
 
-const Authors = (props) => {
+const Authors = ({show,setError}) => {
 
   const [author,setAuthor]= useState('')
   const [born,setBorn] = useState('')
 
   const [changeBornYear] = useMutation(CHANGE_YEAR , {
-    refetchQueries : [{query : ALL_AUTHORS}]
+    refetchQueries : [{query : ALL_AUTHORS}],
+    onError : (error) => {
+      setError(error.graphQLErrors[0].message)
+    }
   })
+
+  const author_result = useQuery(ALL_AUTHORS)
+
+  if(author_result.loading)
+  {
+    return <div>authors loading ...</div>
+  }
+
+  const authors = author_result.data.allAuthors
 
   const submit = async (event) => {
     event.preventDefault()
@@ -19,11 +31,9 @@ const Authors = (props) => {
     setBorn('')
   }
 
-  if (!props.show) {
+  if (!show) {
     return null
   }  
-
-  const authors = props.authors
 
   return (
     <div>

@@ -1,3 +1,4 @@
+require('dotenv').config({path : '../../.env'})
 const { ApolloServer, gql, UserInputError, AuthenticationError } = require('apollo-server')
 const { v1: uuid } = require('uuid')
 const mongoose = require('mongoose')
@@ -8,7 +9,7 @@ const jwt = require('jsonwebtoken')
 const JWT_SECRET = 'SECRET_KEY'
 mongoose.set('useFindAndModify',false)
 
-const MONGODB_URI = 'mongodb+srv://sashitarun:sash2440@cluster0-07ps7.mongodb.net/library-app?retryWrites=true&w=majority'
+const MONGODB_URI = process.env.MONGODB_URI
 
 console.log('connecting to ', MONGODB_URI)
 
