@@ -1,13 +1,20 @@
 import React, { useState, useEffect } from 'react'
+import { useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
 
 
 const Books = (props) => {
   const [genres,setGenres] = useState([])
   const [selectedGenre,setSelectedGenre] = useState(null)
+  const [genreQuery,result] = useLazyQuery(ALL_BOOKS)
+  const [filteredBooks, setFilteredBooks] = useState([])
 
   const books = props.books
   
   useEffect( () => {
+    if(result.data){
+      setFilteredBooks(result.data.allBooks)
+    }
     books.forEach(book => {
       book.genres.forEach(g => {
         if(genres.length === 0 || !genres.find(genre => g === genre))
@@ -16,15 +23,67 @@ const Books = (props) => {
         }
       })
     })
-  },[books,genres])
+  },[books,genres,result])
 
 
   if (!props.show) {
     return null
   }
 
+  const onGenreClick = (genreName) => {
+    if(genreName){
+      setSelectedGenre(genreName)
+      genreQuery({variables : { genre : genreName}})
+    }
+    else{
+      setSelectedGenre(null)
+      setFilteredBooks([])
+    }
+    
+  }
+
   const BooksDisplay = () => {
-    if(!selectedGenre)
+
+    books.forEach(book => {
+      book.genres.forEach(g => {
+        if(genres.length === 0 || !genres.find(genre => g === genre))
+        {
+          setGenres(genres.concat(g))
+        }
+      })
+    })
+
+    if(filteredBooks.length )
+    {
+      return(
+        <div>
+          <h2>books</h2>
+          <h3>Selected Genre is {selectedGenre}</h3>
+          <table>
+            <tbody>
+              <tr>
+                <th>books</th>
+                <th>
+                  author
+                </th>
+                <th>
+                  published
+                </th>
+              </tr>
+              {filteredBooks.map(a =>
+                  <tr key={a.title}>
+                  <td>{a.title}</td>
+                  <td>{a.author.name}</td>
+                  <td>{a.published}</td>
+                  </tr>
+              )}
+            </tbody>
+            </table>
+        </div>  
+      )
+    }
+
+    else 
     {
       return(
         <div>
@@ -53,42 +112,6 @@ const Books = (props) => {
       )
     }
 
-    else{
-      
-      return(
-        <div>
-          <h2>books</h2>
-          <h3>Selected Genre is {selectedGenre}</h3>
-          <table>
-            <tbody>
-              <tr>
-                <th></th>
-                <th>
-                  author
-                </th>
-                <th>
-                  published
-                </th>
-              </tr>
-              {books.map(a =>
-              {
-                if(a.genres.includes(selectedGenre))
-                {
-                  return(<tr key={a.title}>
-                  <td>{a.title}</td>
-                  <td>{a.author.name}</td>
-                  <td>{a.published}</td>
-                  </tr>)
-                }
-                else return null
-              }
-              )}
-            </tbody>
-            </table>
-        </div>  
-      )
-
-    }
 
   }
 
@@ -98,10 +121,10 @@ const Books = (props) => {
       <h2>genres</h2>
         {
           genres.map(g => {
-            return <button key={g} onClick={() => setSelectedGenre(g)}>{g}</button>
+            return <button key={g} onClick={() => onGenreClick(g)}>{g}</button>
           }) 
         }
-      <button onClick={() => setSelectedGenre(null)}>show all</button>
+      <button onClick={() => onGenreClick(null)}>show all</button>
     </div>
   )
 }

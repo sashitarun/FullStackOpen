@@ -11,7 +11,7 @@ mongoose.set('useFindAndModify',false)
 
 const MONGODB_URI = process.env.MONGODB_URI
 
-console.log('connecting to ', MONGODB_URI)
+console.log('connecting to http://localhost:4000 ' )
 
 mongoose.connect(MONGODB_URI, {useNewUrlParser : true})
 .then(() => {
@@ -103,7 +103,7 @@ const typeDefs = gql`
   type Query {
       bookCount : Int!
       authorCount : Int!
-      allBooks(author : String , genre : String) : [Book!]!
+      allBooks(authorName : String , genre : String) : [Book!]!
       allAuthors : [Author!]!
       me : User
   }
@@ -160,23 +160,25 @@ const resolvers = {
       bookCount : async () => await Book.collection.countDocuments(),
       authorCount : async () => await Author.collection.countDocuments(),
       allBooks : async (root,args) => {
-          if(args.author && !args.genre)
+          if(args.authorName && !args.genre)
           {
-              const author = await Author.findOne({name : args.name})
-              const filteredBooks = await Book.find({author : { name : author.name}})
-              return filteredBooks
+            const books = await Book.find({}).populate('author')
+            const filteredBooks =  books.filter(book => book.author.name === args.authorName)
+            return filteredBooks
           }
-          // if( args.genre && !args.author)
-          // {
-          //    const filteredBooks = books.filter(book => book.genres.find(g => g === args.genre))
-          //    return filteredBooks
-          // }
-          // if ( args.genre && args.author )
-          // {
-          //   let filteredBooks = books.filter(book => book.author === args.author)
-          //   filteredBooks = filteredBooks.filter(book => book.genres.find(g => g === args.genre))
-          //   return filteredBooks
-          // }
+          if( args.genre && !args.authorName)
+          {
+             const books = await Book.find({}).populate('author')
+             const filteredBooks = books.filter(book => book.genres.find(g => g === args.genre))
+             return filteredBooks
+          }
+          if ( args.genre && args.authorName )
+          {
+            const books = await Book.find({}).populate('author')
+            const authorFilteredBooks =  books.filter(book => book.author.name === args.authorName)
+            const filteredBooks = authorFilteredBooks.filter(book => book.genres.find(g => g === args.genre))
+            return filteredBooks
+          }
           return Book.find({}).populate('author')
       },
       allAuthors : async () =>{
